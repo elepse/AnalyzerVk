@@ -1,10 +1,15 @@
 <template>
-    <v-row
-            align="center"
-            justify="center"
+    <v-container
+            class="fill-height"
+            fluid
     >
-        <h1>Добро пожаловать!</h1>
-    </v-row>
+        <v-row
+                align="center"
+                justify="center"
+        >
+            <h1>Добро пожаловать!</h1>
+        </v-row>
+    </v-container>
 </template>
 <script>
     export default {

@@ -14,14 +14,8 @@
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
             <v-toolbar-title>AnalyzerVk</v-toolbar-title>
         </v-app-bar>
-
         <v-content>
-            <v-container
-                    class="fill-height"
-                    fluid
-            >
                     <router-view></router-view>
-            </v-container>
         </v-content>
     </v-app>
 </template>

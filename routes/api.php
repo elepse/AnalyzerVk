@@ -30,5 +30,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('users', 'UserController@index')->middleware('isAdmin');
     Route::get('users/{id}', 'UserController@show')->middleware('isAdminOrSelf');
 
-    Route::get('groups', 'UserController@show')->middleware('isAdminOrSelf');
+    Route::get('getGroups', 'StudentController@group');
+    Route::get('showGroup/{id}', 'StudentController@students');
+    Route::post('student/save', 'StudentController@edit');
 });

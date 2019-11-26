@@ -13,14 +13,14 @@
         </v-list-item>
         <!--Авторизованный пользователь-->
         <v-list-item v-if="$auth.check(1)" v-for="(route, key) in routes.user" v-bind:key="route.path" link>
-            <v-list-item-action>
-                <v-icon>{{route.icon}}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-                <router-link :to="{ name : route.path }" :key="key">
+            <router-link :to="{ name : route.path }" :key="key">
+                <v-list-item-action>
+                    <v-icon>{{route.icon}}</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
                     {{route.name}}
-                </router-link>
-            </v-list-item-content>
+                </v-list-item-content>
+            </router-link>
         </v-list-item>
         <!--Авторизованный Админ-->
         <v-list-item v-if="$auth.check(2)" v-for="(route, key) in routes.user" v-bind:key="route.path" link>
@@ -41,14 +41,14 @@
                 <a @click.prevent="$auth.logout()">Выйти</a>
             </v-list-item-content>
         </v-list-item>
-<!--        <v-list-item v-if="$auth.check()">-->
-<!--            <v-list-item-action>-->
-<!--                <v-icon>mdi-account</v-icon>-->
-<!--            </v-list-item-action>-->
-<!--            <v-list-item-content>-->
-<!--                {{userName}}-->
-<!--            </v-list-item-content>-->
-<!--        </v-list-item>-->
+        <!--        <v-list-item v-if="$auth.check()">-->
+        <!--            <v-list-item-action>-->
+        <!--                <v-icon>mdi-account</v-icon>-->
+        <!--            </v-list-item-action>-->
+        <!--            <v-list-item-content>-->
+        <!--                {{userName}}-->
+        <!--            </v-list-item-content>-->
+        <!--        </v-list-item>-->
     </v-list>
 </template>
 
@@ -78,6 +78,11 @@
                             name: 'Главная',
                             icon: 'mdi-home',
                             path: 'home'
+                        },
+                        {
+                            name: 'Группы',
+                            icon: 'mdi-account-group',
+                            path: 'groups'
                         },
                     ],
                     // LOGGED ADMIN
