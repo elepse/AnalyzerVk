@@ -21,10 +21,14 @@
             return {
                 groups: {},
                 selectGroup: null,
-                dataGroup: null,
+                dataGroup: {
+                    'name_group': '',
+                    'name': '',
+                    'year': ''
+                },
                 students: null,
                 statusShowing: false,
-                loading: false
+                loading: false,
             }
         },
         methods: {
@@ -36,7 +40,6 @@
             },
             showGroup(id) {
                 this.students = null;
-                this.dataGroup = null;
                 this.loading = true;
                 this.statusShowing = true;
                 this.selectGroup = id;

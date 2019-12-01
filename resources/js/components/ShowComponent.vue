@@ -3,7 +3,7 @@
         <v-btn color="primary" large text icon v-on:click="$parent.statusShowing = false">
             <v-icon>mdi-arrow-left-bold-circle-outline</v-icon>
         </v-btn>
-        <v-card>
+        <v-card :loading="this.$parent.loading">
             <v-card-title>
                 Данные группы
             </v-card-title>
@@ -13,10 +13,10 @@
                         <v-text-field outlined v-model="this.$parent.dataGroup.name_group" label="Имя группы" disabled></v-text-field>
                     </v-col>
                     <v-col justify="center" cols="4">
-                        <v-text-field outlined v-model="this.$parent.dataGroup.name_group" disabled></v-text-field>
+                        <v-text-field outlined v-model="this.$parent.dataGroup.name" label="Куртор" disabled></v-text-field>
                     </v-col>
                     <v-col justify="center" cols="4">
-                        <v-text-field outlined disabled v-model="this.$parent.dataGroup.name_group">4</v-text-field>
+                        <v-text-field outlined disabled v-model="this.$parent.dataGroup.year" label="Год зачисления">4</v-text-field>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -102,11 +102,11 @@
                     id_student: null,
                     name: null,
                     phone: null,
-                    name_group: null,
+                    name_group: {},
                     address: null,
                     vk_link: null,
                 },
-                load: false
+                load: false,
             }
         },
         methods: {

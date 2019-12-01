@@ -20,7 +20,7 @@ class StudentController extends Controller
     public function students($id) {
         if ($id !== null) {
             $students = Student::query()->where('group_id', '=', $id)->get();
-            $group = Group::find($id);
+            $group = Group::query()->join('users','users.id','=','groups.curator')->find($id);
            return response()->json([
                'status' => 'success',
                'students' => $students->toArray(),
@@ -46,6 +46,4 @@ class StudentController extends Controller
            'status' => 'success'
         ],200);
     }
-
-
 }

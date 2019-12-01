@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -34,3 +33,13 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('showGroup/{id}', 'StudentController@students');
     Route::post('student/save', 'StudentController@edit');
 });
+
+Route::group(['prefix' => 'vk'], function (){
+    Route::get('auth', 'VkController@authVk');
+    Route::get('accessToken', 'VkController@getCode');
+    Route::get('collectData', 'VkController@collectData');
+});
+
+Route::get('test', function (){
+   echo 'asdasd';
+})->middleware('checkVkToken');

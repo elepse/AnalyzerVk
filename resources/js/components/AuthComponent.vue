@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
+                <div class="card" :loading="load">
                     <div class="card-header">Авторизация</div>
 
                     <div class="card-body">
@@ -25,6 +25,7 @@
                                     color="success"
                                     class="mr-4"
                                     type="submit"
+                                    :loading="load"
                             >
                                 Войти
                             </v-btn>
@@ -43,6 +44,7 @@
                 email: null,
                 password: null,
                 has_error: false,
+                load: false,
             }
         },
         mounted() {
@@ -50,6 +52,7 @@
         },
         methods: {
             login() {
+                this.load = true;
                 // get the redirect object
                 var redirect = this.$auth.redirect();
                 var app = this;
@@ -62,11 +65,12 @@
                         // handle redirection
                         const redirectTo = redirect ? redirect.from.name : this.$auth.user().role === 2 ? 'home' : 'home';
                         this.$router.push({name: redirectTo});
-                        this.download = false;
                     },
                     error: function() {
                         app.has_error = true;
-                        this.download = false;
+                    },
+                    then: function () {
+                      this.load = false;
                     },
                     rememberMe: true,
                     fetchUser: true

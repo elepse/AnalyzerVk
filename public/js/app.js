@@ -3055,19 +3055,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       email: null,
       password: null,
-      has_error: false
+      has_error: false,
+      load: false
     };
   },
   mounted: function mounted() {//
   },
   methods: {
     login: function login() {
-      // get the redirect object
+      this.load = true; // get the redirect object
+
       var redirect = this.$auth.redirect();
       var app = this;
       this.$auth.login({
@@ -3081,11 +3084,12 @@ __webpack_require__.r(__webpack_exports__);
           this.$router.push({
             name: redirectTo
           });
-          this.download = false;
         },
         error: function error() {
           app.has_error = true;
-          this.download = false;
+        },
+        then: function then() {
+          this.load = false;
         },
         rememberMe: true,
         fetchUser: true
@@ -3160,7 +3164,11 @@ __webpack_require__.r(__webpack_exports__);
     return {
       groups: {},
       selectGroup: null,
-      dataGroup: null,
+      dataGroup: {
+        'name_group': '',
+        'name': '',
+        'year': ''
+      },
       students: null,
       statusShowing: false,
       loading: false
@@ -3178,7 +3186,6 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.students = null;
-      this.dataGroup = null;
       this.loading = true;
       this.statusShowing = true;
       this.selectGroup = id;
@@ -3475,7 +3482,7 @@ __webpack_require__.r(__webpack_exports__);
         id_student: null,
         name: null,
         phone: null,
-        name_group: null,
+        name_group: {},
         address: null,
         vk_link: null
       },
@@ -40050,7 +40057,7 @@ var render = function() {
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-8" }, [
-        _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card", attrs: { loading: _vm.load } }, [
           _c("div", { staticClass: "card-header" }, [_vm._v("Авторизация")]),
           _vm._v(" "),
           _c(
@@ -40100,7 +40107,11 @@ var render = function() {
                     "v-btn",
                     {
                       staticClass: "mr-4",
-                      attrs: { color: "success", type: "submit" }
+                      attrs: {
+                        color: "success",
+                        type: "submit",
+                        loading: _vm.load
+                      }
                     },
                     [
                       _vm._v(
@@ -40499,6 +40510,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "v-card",
+        { attrs: { loading: this.$parent.loading } },
         [
           _c("v-card-title", [_vm._v("\n            Данные группы\n        ")]),
           _vm._v(" "),
@@ -40535,13 +40547,13 @@ var render = function() {
                     { attrs: { justify: "center", cols: "4" } },
                     [
                       _c("v-text-field", {
-                        attrs: { outlined: "", disabled: "" },
+                        attrs: { outlined: "", label: "Куртор", disabled: "" },
                         model: {
-                          value: this.$parent.dataGroup.name_group,
+                          value: this.$parent.dataGroup.name,
                           callback: function($$v) {
-                            _vm.$set(this.$parent.dataGroup, "name_group", $$v)
+                            _vm.$set(this.$parent.dataGroup, "name", $$v)
                           },
-                          expression: "this.$parent.dataGroup.name_group"
+                          expression: "this.$parent.dataGroup.name"
                         }
                       })
                     ],
@@ -40555,17 +40567,17 @@ var render = function() {
                       _c(
                         "v-text-field",
                         {
-                          attrs: { outlined: "", disabled: "" },
+                          attrs: {
+                            outlined: "",
+                            disabled: "",
+                            label: "Год зачисления"
+                          },
                           model: {
-                            value: this.$parent.dataGroup.name_group,
+                            value: this.$parent.dataGroup.year,
                             callback: function($$v) {
-                              _vm.$set(
-                                this.$parent.dataGroup,
-                                "name_group",
-                                $$v
-                              )
+                              _vm.$set(this.$parent.dataGroup, "year", $$v)
                             },
-                            expression: "this.$parent.dataGroup.name_group"
+                            expression: "this.$parent.dataGroup.year"
                           }
                         },
                         [_vm._v("4")]

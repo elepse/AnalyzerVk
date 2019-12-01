@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 */
 Route::get('/{any?}', function (){
     return view('welcome');
-})->where('any', '^(?!api\/)[\/\w\.-]*');
+})->where('any', '^(?!api\/)[\/\w\.-]*')->name('welcome');
 
 
 
