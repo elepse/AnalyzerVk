@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Student;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 use ATehnix\VkClient as VK;
@@ -12,10 +13,14 @@ class VkController extends Controller
 {
     public $auth = null;
     public $token = null;
+    public $vkClient = null;
+
     function __construct()
     {
         $this->auth = new VK\Auth('7227040', 'Yfw9yfyB9CTBNqj6tyxt', 'http://127.0.0.1:8000/api/vk/accessToken');
         $this->token = Cookie::get('vkToken');
+        $this->vkClient = new Client('5.103');
+        $this->vkClient->setDefaultToken($this->token);
     }
 
     public function authVk()
@@ -30,14 +35,39 @@ class VkController extends Controller
         return redirect('/')->cookie($cookie);
     }
 
-    public function collectData(Request $request)
+    public function collectData($idGroup)
     {
-        $api = new Client('5.103');
-        $api->setDefaultToken("94389a98c0092b702bdcf933afe6440ac73a33937ea4e2f64bb1ab36ab759b397d5d996e471855d08079b");
-        $userId = $request->get('userId');
-        $query = new VK\Requests\Request('users.get', ['user_ids' => $userId]);
-        $response = $api->send($query);
-        var_dump($response);
-    }
+        $studentsData = [];
+        $studentsIds = [];
+        $students = Student::query()->where('group_id', '=', "$idGroup")->get('vk_link');
 
+        //получаем айди пользователей
+        foreach ($students as $student) {
+            $vkId = explode("/", $student->vk_link);
+            $vkId = $vkId[count($vkId) - 1];
+            array_push($studentsIds, $vkId);
+        }
+        $studentsIds = implode(",", $studentsIds);
+
+        //отправляем запрос к вк апи
+        $request = new VK\Requests\Request('users.get', ['user_ids' => $studentsIds]);
+        $studentsIds = $this->vkClient->send($request);
+
+        foreach ($studentsIds['response'] as $student) {
+            array_push($studentsData, new VK\Requests\Request('wall.get', ['owner_id' => $student['id']]));
+        }
+        if (!is_null($idGroup)) {
+            $execute = VK\Requests\ExecuteRequest::make($studentsData);
+            $response = $this->vkClient->send($execute);
+
+            return response()->json([
+                'vk' => $response,
+                'status' => 'success'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error'
+            ], 400);
+        }
+    }
 }

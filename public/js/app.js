@@ -3473,6 +3473,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ShowComponent",
   data: function data() {
@@ -3486,7 +3493,8 @@ __webpack_require__.r(__webpack_exports__);
         address: null,
         vk_link: null
       },
-      load: false
+      load: false,
+      vkLoad: false
     };
   },
   methods: {
@@ -3508,6 +3516,16 @@ __webpack_require__.r(__webpack_exports__);
         vkLink: this.editStudent.vk_link
       }).then(function () {
         _this.studentEdit = false;
+        _this.load = false;
+      });
+    },
+    collectVkData: function collectVkData() {
+      var _this2 = this;
+
+      this.vkLoad = true;
+      axios.get('/vk/collectData/' + this.$parent.dataGroup.id_group).then(function (response) {
+        _this2.vkLoad = false;
+        console.log(response);
       });
     }
   }
@@ -40547,7 +40565,7 @@ var render = function() {
                     { attrs: { justify: "center", cols: "4" } },
                     [
                       _c("v-text-field", {
-                        attrs: { outlined: "", label: "Куртор", disabled: "" },
+                        attrs: { outlined: "", label: "Куратор", disabled: "" },
                         model: {
                           value: this.$parent.dataGroup.name,
                           callback: function($$v) {
@@ -40580,7 +40598,27 @@ var render = function() {
                             expression: "this.$parent.dataGroup.year"
                           }
                         },
-                        [_vm._v("4")]
+                        [_vm._v("4\n                    ")]
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-col",
+                    { attrs: { justify: "center", cols: "12" } },
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { loading: _vm.vkLoad, color: "info" },
+                          on: {
+                            click: function($event) {
+                              return _vm.collectVkData()
+                            }
+                          }
+                        },
+                        [_vm._v("Загрузить VK данные")]
                       )
                     ],
                     1
@@ -40637,11 +40675,7 @@ var render = function() {
                     ? _c("v-icon", { attrs: { color: "green" } }, [
                         _vm._v("mdi-vk-box")
                       ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("v-icon", { attrs: { color: "green" } }, [
-                    _vm._v("mdi-instagram")
-                  ])
+                    : _vm._e()
                 ],
                 1
               ),
@@ -40845,7 +40879,7 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v("Сохарнить")]
+                    [_vm._v("Сохранить")]
                   )
                 ],
                 1

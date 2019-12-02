@@ -34,10 +34,10 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('student/save', 'StudentController@edit');
 });
 
-Route::group(['prefix' => 'vk'], function (){
+Route::group(['prefix' => 'vk', 'middleware' => 'checkVkToken'], function (){
     Route::get('auth', 'VkController@authVk');
     Route::get('accessToken', 'VkController@getCode');
-    Route::get('collectData', 'VkController@collectData');
+    Route::get('collectData/{idGroup}', 'VkController@collectData');
 });
 
 Route::get('test', function (){

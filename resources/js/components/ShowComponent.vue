@@ -10,13 +10,19 @@
             <v-card-text>
                 <v-row>
                     <v-col justify="center" cols="4">
-                        <v-text-field outlined v-model="this.$parent.dataGroup.name_group" label="Имя группы" disabled></v-text-field>
+                        <v-text-field outlined v-model="this.$parent.dataGroup.name_group" label="Имя группы"
+                                      disabled></v-text-field>
                     </v-col>
                     <v-col justify="center" cols="4">
-                        <v-text-field outlined v-model="this.$parent.dataGroup.name" label="Куртор" disabled></v-text-field>
+                        <v-text-field outlined v-model="this.$parent.dataGroup.name" label="Куратор"
+                                      disabled></v-text-field>
                     </v-col>
                     <v-col justify="center" cols="4">
-                        <v-text-field outlined disabled v-model="this.$parent.dataGroup.year" label="Год зачисления">4</v-text-field>
+                        <v-text-field outlined disabled v-model="this.$parent.dataGroup.year" label="Год зачисления">4
+                        </v-text-field>
+                    </v-col>
+                    <v-col justify="center" cols="12">
+                        <v-btn :loading="vkLoad" v-on:click="collectVkData()" color="info">Загрузить VK данные</v-btn>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -43,7 +49,6 @@
                 <td>{{student.address}}</td>
                 <td>
                     <v-icon v-if="student.vk_link !== null" color="green">mdi-vk-box</v-icon>
-                    <v-icon color="green">mdi-instagram</v-icon>
                 </td>
                 <td>
                     <v-btn icon large>
@@ -68,13 +73,15 @@
                                 <v-text-field v-model="editStudent.address" label="Адресс" required></v-text-field>
                             </v-col>
                             <v-col cols="12">
-                                <v-text-field v-model="editStudent.vk_link" label="Ссылка на профиль vk" required></v-text-field>
+                                <v-text-field v-model="editStudent.vk_link" label="Ссылка на профиль vk"
+                                              required></v-text-field>
                             </v-col>
                             <v-col cols="6">
                                 <v-text-field v-model="editStudent.name_group" label="Группа" required></v-text-field>
                             </v-col>
                             <v-col cols="6">
-                                <v-text-field v-model="editStudent.phone" label="Номер телефона" required></v-text-field>
+                                <v-text-field v-model="editStudent.phone" label="Номер телефона"
+                                              required></v-text-field>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -82,7 +89,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="studentEdit = false">Закрыть</v-btn>
-                    <v-btn color="blue darken-1" :loading="this.load" v-on:click="save()" text>Сохарнить</v-btn>
+                    <v-btn color="blue darken-1" :loading="this.load" v-on:click="save()" text>Сохранить</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -107,6 +114,7 @@
                     vk_link: null,
                 },
                 load: false,
+                vkLoad: false
             }
         },
         methods: {
@@ -116,7 +124,7 @@
                     return i.id_student === studentId;
                 });
             },
-            save(){
+            save() {
                 this.load = true;
                 axios.post('/student/save', {
                     id_student: this.editStudent.id_student,
@@ -125,8 +133,17 @@
                     address: this.editStudent.address,
                     vkLink: this.editStudent.vk_link
                 }).then(() => {
-                    this.studentEdit = false
+                    this.studentEdit = false;
+                    this.load = false;
                 })
+            },
+            collectVkData() {
+                this.vkLoad = true;
+                axios.get('/vk/collectData/' + this.$parent.dataGroup.id_group)
+                    .then(response => {
+                        this.vkLoad = false;
+                        console.log(response);
+                    })
             }
         },
     }
