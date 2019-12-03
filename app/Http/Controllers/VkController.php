@@ -70,4 +70,27 @@ class VkController extends Controller
             ], 400);
         }
     }
+
+    public function saveLink(Request $request) {
+        $vkLink = $request->get('vkLink', null);
+        $studentId = $request->get('studentId', null);
+
+        $vkId = explode('/',$vkLink);
+        $vkId = $vkId[count($vkId) - 1];
+        $vkRequest = new VK\Requests\Request('users.get', ['user_ids' => $vkId]);
+        $userData = $this->vkClient->send($vkRequest);
+
+        if (!$userData['response'][0]['is_closed']){
+            Student::find($studentId)->update(['vk_id' => $userData['response'][0]['id'], 'vk_link' => $vkLink]);
+            return response()->json([
+               'status' => 'success'
+            ], 200);
+        }else {
+            return response()->json([
+                'status' => 'error',
+                'errors' => 'Профиль пользователя приватный.'
+            ], 400);
+        }
+
+    }
 }

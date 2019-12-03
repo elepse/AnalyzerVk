@@ -48,7 +48,8 @@
                 <td>{{$parent.dataGroup.name_group}}</td>
                 <td>{{student.address}}</td>
                 <td>
-                    <v-icon v-if="student.vk_link !== null" color="green">mdi-vk-box</v-icon>
+                    <v-icon v-if="student.vk_link !== '' && student.vk_link !== null" v-on:click="showVkLink(student.id_student)" color="green">mdi-vk-box</v-icon>
+                    <v-icon v-if="student.vk_link === '' || student.vk_link === null" v-on:click="showVkLink(student.id_student)" color="grey">mdi-vk-box</v-icon>
                 </td>
                 <td>
                     <v-btn icon large>
@@ -72,16 +73,11 @@
                             <v-col cols="12">
                                 <v-text-field v-model="editStudent.address" label="Адресс" required></v-text-field>
                             </v-col>
-                            <v-col cols="12">
-                                <v-text-field v-model="editStudent.vk_link" label="Ссылка на профиль vk"
-                                              required></v-text-field>
-                            </v-col>
                             <v-col cols="6">
                                 <v-text-field v-model="editStudent.name_group" label="Группа" required></v-text-field>
                             </v-col>
                             <v-col cols="6">
-                                <v-text-field v-model="editStudent.phone" label="Номер телефона"
-                                              required></v-text-field>
+                                <v-text-field v-model="editStudent.phone" label="Номер телефона" required></v-text-field>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -90,6 +86,32 @@
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="studentEdit = false">Закрыть</v-btn>
                     <v-btn color="blue darken-1" :loading="this.load" v-on:click="save()" text>Сохранить</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="vkEdit" persistent max-width="400px">
+            <v-card :loading="this.load">
+                <v-card-title>
+                    <span class="headline">Профиль vk</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-text-field v-model="vkLink" label="Ссылка на профиль VK" required></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-alert v-if="apiError" dense outlined type="error">
+                                    Профиль пользователя приватный
+                                </v-alert>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="vkEdit = false">Закрыть</v-btn>
+                    <v-btn color="blue darken-1" :loading="this.load" v-on:click="saveVkLink()" text>Сохранить</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -105,6 +127,7 @@
         data() {
             return {
                 studentEdit: false,
+                vkEdit: false,
                 editStudent: {
                     id_student: null,
                     name: null,
@@ -113,8 +136,10 @@
                     address: null,
                     vk_link: null,
                 },
+                vkError: null,
                 load: false,
-                vkLoad: false
+                vkLoad: false,
+                vkLink: '',
             }
         },
         methods: {
@@ -123,6 +148,29 @@
                 this.editStudent = this.$parent.students.find(function (i) {
                     return i.id_student === studentId;
                 });
+            },
+            showVkLink(studentId) {
+                this.vkError = null;
+                this.vkEdit = true;
+                this.editStudent = this.$parent.students.find(function (i) {
+                    return i.id_student === studentId;
+                });
+                this.vkLink = this.editStudent.vk_link;
+            },
+            saveVkLink () {
+                this.vkError = null;
+                this.load = true;
+                axios.post('/vk/saveLink',{
+                    'vkLink': this.vkLink,
+                    'studentId': this.editStudent.id_student
+                }).then(() => {
+                        this.vkEdit = false;
+                        this.editStudent.vk_link = this.vkLink;
+                        this.load = false;
+                    }).catch(() => {
+                    this.load = false;
+                    this.vkError = 'Профиль пользователя приватный';
+                })
             },
             save() {
                 this.load = true;

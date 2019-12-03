@@ -3480,11 +3480,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ShowComponent",
   data: function data() {
     return {
       studentEdit: false,
+      vkEdit: false,
       editStudent: {
         id_student: null,
         name: null,
@@ -3493,8 +3516,10 @@ __webpack_require__.r(__webpack_exports__);
         address: null,
         vk_link: null
       },
+      vkError: null,
       load: false,
-      vkLoad: false
+      vkLoad: false,
+      vkLink: ''
     };
   },
   methods: {
@@ -3504,8 +3529,33 @@ __webpack_require__.r(__webpack_exports__);
         return i.id_student === studentId;
       });
     },
-    save: function save() {
+    showVkLink: function showVkLink(studentId) {
+      this.vkError = null;
+      this.vkEdit = true;
+      this.editStudent = this.$parent.students.find(function (i) {
+        return i.id_student === studentId;
+      });
+      this.vkLink = this.editStudent.vk_link;
+    },
+    saveVkLink: function saveVkLink() {
       var _this = this;
+
+      this.vkError = null;
+      this.load = true;
+      axios.post('/vk/saveLink', {
+        'vkLink': this.vkLink,
+        'studentId': this.editStudent.id_student
+      }).then(function () {
+        _this.vkEdit = false;
+        _this.editStudent.vk_link = _this.vkLink;
+        _this.load = false;
+      })["catch"](function () {
+        _this.load = false;
+        _this.vkError = 'Профиль пользователя приватный';
+      });
+    },
+    save: function save() {
+      var _this2 = this;
 
       this.load = true;
       axios.post('/student/save', {
@@ -3515,16 +3565,16 @@ __webpack_require__.r(__webpack_exports__);
         address: this.editStudent.address,
         vkLink: this.editStudent.vk_link
       }).then(function () {
-        _this.studentEdit = false;
-        _this.load = false;
+        _this2.studentEdit = false;
+        _this2.load = false;
       });
     },
     collectVkData: function collectVkData() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.vkLoad = true;
       axios.get('/vk/collectData/' + this.$parent.dataGroup.id_group).then(function (response) {
-        _this2.vkLoad = false;
+        _this3.vkLoad = false;
         console.log(response);
       });
     }
@@ -40671,10 +40721,34 @@ var render = function() {
               _c(
                 "td",
                 [
-                  student.vk_link !== null
-                    ? _c("v-icon", { attrs: { color: "green" } }, [
-                        _vm._v("mdi-vk-box")
-                      ])
+                  student.vk_link !== "" && student.vk_link !== null
+                    ? _c(
+                        "v-icon",
+                        {
+                          attrs: { color: "green" },
+                          on: {
+                            click: function($event) {
+                              return _vm.showVkLink(student.id_student)
+                            }
+                          }
+                        },
+                        [_vm._v("mdi-vk-box")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  student.vk_link === "" || student.vk_link === null
+                    ? _c(
+                        "v-icon",
+                        {
+                          attrs: { color: "grey" },
+                          on: {
+                            click: function($event) {
+                              return _vm.showVkLink(student.id_student)
+                            }
+                          }
+                        },
+                        [_vm._v("mdi-vk-box")]
+                      )
                     : _vm._e()
                 ],
                 1
@@ -40780,27 +40854,6 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "v-col",
-                            { attrs: { cols: "12" } },
-                            [
-                              _c("v-text-field", {
-                                attrs: {
-                                  label: "Ссылка на профиль vk",
-                                  required: ""
-                                },
-                                model: {
-                                  value: _vm.editStudent.vk_link,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.editStudent, "vk_link", $$v)
-                                  },
-                                  expression: "editStudent.vk_link"
-                                }
-                              })
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "v-col",
                             { attrs: { cols: "6" } },
                             [
                               _c("v-text-field", {
@@ -40876,6 +40929,135 @@ var render = function() {
                       on: {
                         click: function($event) {
                           return _vm.save()
+                        }
+                      }
+                    },
+                    [_vm._v("Сохранить")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-dialog",
+        {
+          attrs: { persistent: "", "max-width": "400px" },
+          model: {
+            value: _vm.vkEdit,
+            callback: function($$v) {
+              _vm.vkEdit = $$v
+            },
+            expression: "vkEdit"
+          }
+        },
+        [
+          _c(
+            "v-card",
+            { attrs: { loading: this.load } },
+            [
+              _c("v-card-title", [
+                _c("span", { staticClass: "headline" }, [_vm._v("Профиль vk")])
+              ]),
+              _vm._v(" "),
+              _c(
+                "v-card-text",
+                [
+                  _c(
+                    "v-container",
+                    [
+                      _c(
+                        "v-row",
+                        [
+                          _c(
+                            "v-col",
+                            { attrs: { cols: "12" } },
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "Ссылка на профиль VK",
+                                  required: ""
+                                },
+                                model: {
+                                  value: _vm.vkLink,
+                                  callback: function($$v) {
+                                    _vm.vkLink = $$v
+                                  },
+                                  expression: "vkLink"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-col",
+                            { attrs: { cols: "12" } },
+                            [
+                              _vm.apiError
+                                ? _c(
+                                    "v-alert",
+                                    {
+                                      attrs: {
+                                        dense: "",
+                                        outlined: "",
+                                        type: "error"
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                Профиль пользователя приватный\n                            "
+                                      )
+                                    ]
+                                  )
+                                : _vm._e()
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "blue darken-1", text: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.vkEdit = false
+                        }
+                      }
+                    },
+                    [_vm._v("Закрыть")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: {
+                        color: "blue darken-1",
+                        loading: this.load,
+                        text: ""
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.saveVkLink()
                         }
                       }
                     },
