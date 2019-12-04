@@ -3154,6 +3154,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "GroupsComponent",
@@ -3162,7 +3177,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      groups: {},
+      groups: null,
       selectGroup: null,
       dataGroup: {
         'name_group': '',
@@ -3178,8 +3193,10 @@ __webpack_require__.r(__webpack_exports__);
     getGroups: function getGroups() {
       var _this = this;
 
+      this.loading = true;
       axios.get('/getGroups').then(function (response) {
         _this.groups = response.data.groups;
+        _this.loading = false;
       });
     },
     showGroup: function showGroup(id) {
@@ -3502,6 +3519,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ShowComponent",
   data: function data() {
@@ -3516,13 +3564,41 @@ __webpack_require__.r(__webpack_exports__);
         address: null,
         vk_link: null
       },
+      newStudent: {
+        'id_student': null,
+        'name': null,
+        'group_id': null,
+        'phone': null,
+        'address': null
+      },
+      //флаги состояний
       vkError: null,
       load: false,
       vkLoad: false,
-      vkLink: ''
+      vkLink: '',
+      newStudentModal: false
     };
   },
   methods: {
+    createStudent: function createStudent() {
+      var _this = this;
+
+      this.load = true;
+      this.newStudent.group_id = this.$parent.dataGroup.id_group;
+      axios.post('student/create', this.newStudent).then(function (response) {
+        _this.load = false;
+        _this.newStudentModal = false;
+        _this.newStudent.id_student = response.data.id_student;
+        _this.$parent.students = Object.assign(_this.$parent.students, _this.newStudent);
+        _this.newStudent = {
+          'id_student': null,
+          'name': null,
+          'group_id': null,
+          'phone': null,
+          'address': null
+        };
+      });
+    },
     showDataStudent: function showDataStudent(studentId) {
       this.studentEdit = true;
       this.editStudent = this.$parent.students.find(function (i) {
@@ -3538,7 +3614,7 @@ __webpack_require__.r(__webpack_exports__);
       this.vkLink = this.editStudent.vk_link;
     },
     saveVkLink: function saveVkLink() {
-      var _this = this;
+      var _this2 = this;
 
       this.vkError = null;
       this.load = true;
@@ -3546,16 +3622,16 @@ __webpack_require__.r(__webpack_exports__);
         'vkLink': this.vkLink,
         'studentId': this.editStudent.id_student
       }).then(function () {
-        _this.vkEdit = false;
-        _this.editStudent.vk_link = _this.vkLink;
-        _this.load = false;
+        _this2.vkEdit = false;
+        _this2.editStudent.vk_link = _this2.vkLink;
+        _this2.load = false;
       })["catch"](function () {
-        _this.load = false;
-        _this.vkError = 'Профиль пользователя приватный';
+        _this2.load = false;
+        _this2.vkError = 'Профиль пользователя приватный';
       });
     },
     save: function save() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.load = true;
       axios.post('/student/save', {
@@ -3565,16 +3641,16 @@ __webpack_require__.r(__webpack_exports__);
         address: this.editStudent.address,
         vkLink: this.editStudent.vk_link
       }).then(function () {
-        _this2.studentEdit = false;
-        _this2.load = false;
+        _this3.studentEdit = false;
+        _this3.load = false;
       });
     },
     collectVkData: function collectVkData() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.vkLoad = true;
       axios.get('/vk/collectData/' + this.$parent.dataGroup.id_group).then(function (response) {
-        _this3.vkLoad = false;
+        _this4.vkLoad = false;
         console.log(response);
       });
     }
@@ -40260,53 +40336,121 @@ var render = function() {
         ? _c(
             "v-row",
             { attrs: { justify: "center" } },
-            _vm._l(_vm.groups, function(group) {
-              return _c(
-                "v-card",
-                {
-                  key: group.id_group,
-                  staticStyle: { margin: "5px" },
-                  attrs: {
-                    "min-width": "300",
-                    color: "#FF9800",
-                    height: "150",
-                    hover: ""
-                  },
-                  on: {
-                    click: function($event) {
-                      return _vm.showGroup(group.id_group)
-                    }
-                  }
-                },
-                [
-                  _c(
-                    "v-container",
-                    { staticClass: "fill-height" },
+            [
+              _vm.groups !== null
+                ? _c(
+                    "v-card",
+                    {
+                      staticStyle: { margin: "5px", "border-color": "#ff9800" },
+                      attrs: {
+                        "min-width": "300",
+                        outlined: "",
+                        height: "150",
+                        hover: ""
+                      }
+                    },
                     [
-                      _c("v-row", { attrs: { justify: "center" } }, [
-                        _c(
-                          "h1",
-                          {
-                            staticStyle: {
-                              "text-align": "center",
-                              color: "white"
-                            }
-                          },
-                          [_vm._v(_vm._s(group.name_group))]
-                        )
-                      ])
+                      _c(
+                        "v-container",
+                        {
+                          staticClass: "fill-height",
+                          attrs: { justify: "center" }
+                        },
+                        [
+                          _c(
+                            "v-row",
+                            {
+                              staticStyle: { margin: "0" },
+                              attrs: { justify: "center" }
+                            },
+                            [
+                              _c("v-icon", { attrs: { large: "" } }, [
+                                _vm._v("mdi-account-multiple-plus-outline")
+                              ])
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
                     ],
                     1
                   )
-                ],
-                1
-              )
-            }),
-            1
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._l(_vm.groups, function(group) {
+                return _c(
+                  "v-card",
+                  {
+                    key: group.id_group,
+                    staticStyle: { margin: "5px" },
+                    attrs: {
+                      "min-width": "300",
+                      color: "#FF9800",
+                      height: "150",
+                      hover: ""
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.showGroup(group.id_group)
+                      }
+                    }
+                  },
+                  [
+                    _c(
+                      "v-container",
+                      { staticClass: "fill-height" },
+                      [
+                        _c(
+                          "v-row",
+                          {
+                            staticStyle: { margin: "0" },
+                            attrs: { justify: "center" }
+                          },
+                          [
+                            _c(
+                              "h1",
+                              {
+                                staticStyle: {
+                                  "text-align": "center",
+                                  color: "white"
+                                }
+                              },
+                              [_vm._v(_vm._s(group.name_group))]
+                            )
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              })
+            ],
+            2
           )
         : _vm._e(),
       _vm._v(" "),
-      _vm.statusShowing ? _c("show-component") : _vm._e()
+      _vm.statusShowing ? _c("show-component") : _vm._e(),
+      _vm._v(" "),
+      _vm.loading
+        ? _c(
+            "v-row",
+            { attrs: { justify: "center" } },
+            [
+              _c("v-progress-circular", {
+                attrs: {
+                  size: 70,
+                  width: 7,
+                  color: "orange",
+                  indeterminate: ""
+                }
+              })
+            ],
+            1
+          )
+        : _vm._e()
     ],
     1
   )
@@ -40732,7 +40876,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("mdi-vk-box")]
+                        [_vm._v("mdi-vk-box\n                ")]
                       )
                     : _vm._e(),
                   _vm._v(" "),
@@ -40747,7 +40891,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v("mdi-vk-box")]
+                        [_vm._v("mdi-vk-box\n                ")]
                       )
                     : _vm._e()
                 ],
@@ -40783,6 +40927,41 @@ var render = function() {
           0
         )
       ]),
+      _vm._v(" "),
+      !this.$parent.loading
+        ? _c(
+            "v-container",
+            { staticClass: "fill-height" },
+            [
+              _c(
+                "v-row",
+                { attrs: { justify: "center" } },
+                [
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "success", outlined: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.newStudentModal = true
+                        }
+                      }
+                    },
+                    [
+                      _c("v-icon", [_vm._v("mdi-account-plus")]),
+                      _vm._v(
+                        "\n                Добавить студента\n            "
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        : _vm._e(),
       _vm._v(" "),
       _c(
         "v-dialog",
@@ -41073,18 +41252,129 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _vm.$parent.loading
-        ? _c(
-            "v-row",
-            { attrs: { justify: "center" } },
+      _c(
+        "v-dialog",
+        {
+          attrs: { persistent: "", "max-width": "600px" },
+          model: {
+            value: _vm.newStudentModal,
+            callback: function($$v) {
+              _vm.newStudentModal = $$v
+            },
+            expression: "newStudentModal"
+          }
+        },
+        [
+          _c(
+            "v-card",
+            { attrs: { loading: this.load } },
             [
-              _c("v-btn", {
-                attrs: { "x-large": "", loading: "", icon: "", text: "" }
-              })
+              _c("v-card-title", [
+                _c(
+                  "span",
+                  { staticClass: "headline" },
+                  [
+                    _c("v-icon", [_vm._v("mdi-account-plus")]),
+                    _vm._v(" Добавить студента")
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "v-card-text",
+                [
+                  _c(
+                    "v-container",
+                    [
+                      _c(
+                        "v-form",
+                        [
+                          _c("v-text-field", {
+                            attrs: { label: "ФИО", required: "" },
+                            model: {
+                              value: _vm.newStudent.name,
+                              callback: function($$v) {
+                                _vm.$set(_vm.newStudent, "name", $$v)
+                              },
+                              expression: "newStudent.name"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("v-text-field", {
+                            attrs: { label: "Адресс", required: "" },
+                            model: {
+                              value: _vm.newStudent.address,
+                              callback: function($$v) {
+                                _vm.$set(_vm.newStudent, "address", $$v)
+                              },
+                              expression: "newStudent.address"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("v-text-field", {
+                            attrs: { label: "Телефон", required: "" },
+                            model: {
+                              value: _vm.newStudent.phone,
+                              callback: function($$v) {
+                                _vm.$set(_vm.newStudent, "phone", $$v)
+                              },
+                              expression: "newStudent.phone"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "blue darken-1", text: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.newStudentModal = false
+                        }
+                      }
+                    },
+                    [_vm._v("Закрыть")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: {
+                        color: "blue darken-1",
+                        loading: this.load,
+                        text: ""
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.createStudent()
+                        }
+                      }
+                    },
+                    [_vm._v("Сохранить")]
+                  )
+                ],
+                1
+              )
             ],
             1
           )
-        : _vm._e()
+        ],
+        1
+      )
     ],
     1
   )

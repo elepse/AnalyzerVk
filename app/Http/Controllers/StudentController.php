@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Group;
 use App\Student;
 use Illuminate\Http\Request;
+use function Composer\Autoload\includeFile;
 
 class StudentController extends Controller
 {
@@ -45,5 +46,25 @@ class StudentController extends Controller
         return response()->json([
            'status' => 'success'
         ],200);
+    }
+
+    public function create(Request $request) {
+        $name = $request->get('name', null);
+        $group_id = $request->get('group_id', null);
+        $phone = $request->get('phone', null);
+        $address = $request->get('address');
+
+        $student = (new Student())->fill([
+            'name' => $name,
+            'group_id' => $group_id,
+            'phone' => $phone,
+            'address' => $address,
+        ]);
+        $student->save();
+
+        return response()->json([
+            'status' => 'success',
+            'student_id' => $student->id_student
+        ], 200);
     }
 }

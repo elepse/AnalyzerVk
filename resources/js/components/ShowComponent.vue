@@ -48,8 +48,12 @@
                 <td>{{$parent.dataGroup.name_group}}</td>
                 <td>{{student.address}}</td>
                 <td>
-                    <v-icon v-if="student.vk_link !== '' && student.vk_link !== null" v-on:click="showVkLink(student.id_student)" color="green">mdi-vk-box</v-icon>
-                    <v-icon v-if="student.vk_link === '' || student.vk_link === null" v-on:click="showVkLink(student.id_student)" color="grey">mdi-vk-box</v-icon>
+                    <v-icon v-if="student.vk_link !== '' && student.vk_link !== null"
+                            v-on:click="showVkLink(student.id_student)" color="green">mdi-vk-box
+                    </v-icon>
+                    <v-icon v-if="student.vk_link === '' || student.vk_link === null"
+                            v-on:click="showVkLink(student.id_student)" color="grey">mdi-vk-box
+                    </v-icon>
                 </td>
                 <td>
                     <v-btn icon large>
@@ -59,6 +63,14 @@
             </tr>
             </tbody>
         </v-simple-table>
+        <v-container v-if="!this.$parent.loading" class="fill-height">
+            <v-row justify="center">
+                <v-btn v-on:click="newStudentModal = true " color="success" outlined>
+                    <v-icon>mdi-account-plus</v-icon>
+                    Добавить студента
+                </v-btn>
+            </v-row>
+        </v-container>
         <v-dialog v-model="studentEdit" persistent max-width="600px">
             <v-card :loading="this.load">
                 <v-card-title>
@@ -77,7 +89,8 @@
                                 <v-text-field v-model="editStudent.name_group" label="Группа" required></v-text-field>
                             </v-col>
                             <v-col cols="6">
-                                <v-text-field v-model="editStudent.phone" label="Номер телефона" required></v-text-field>
+                                <v-text-field v-model="editStudent.phone" label="Номер телефона"
+                                              required></v-text-field>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -115,9 +128,27 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-row v-if="$parent.loading" justify="center">
-            <v-btn x-large loading icon text></v-btn>
-        </v-row>
+        <v-dialog v-model="newStudentModal" persistent max-width="600px">
+            <v-card :loading="this.load">
+                <v-card-title>
+                    <span class="headline"><v-icon>mdi-account-plus</v-icon> Добавить студента</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-form>
+                                <v-text-field label="ФИО" v-model="newStudent.name" required></v-text-field>
+                                <v-text-field label="Адресс" v-model="newStudent.address" required></v-text-field>
+                                <v-text-field label="Телефон" v-model="newStudent.phone" required></v-text-field>
+                        </v-form>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="newStudentModal = false">Закрыть</v-btn>
+                    <v-btn color="blue darken-1" :loading="this.load" v-on:click="createStudent()" text>Сохранить</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -136,13 +167,40 @@
                     address: null,
                     vk_link: null,
                 },
+                newStudent: {
+                    'id_student': null,
+                    'name': null,
+                    'group_id': null,
+                    'phone': null,
+                    'address': null
+                },
+                //флаги состояний
                 vkError: null,
                 load: false,
                 vkLoad: false,
                 vkLink: '',
+                newStudentModal: false,
             }
         },
         methods: {
+            createStudent(){
+                this.load = true;
+                this.newStudent.group_id = this.$parent.dataGroup.id_group;
+              axios.post('student/create',this.newStudent)
+                  .then(response => {
+                    this.load = false;
+                    this.newStudentModal = false;
+                    this.newStudent.id_student = response.data.id_student;
+                    this.$parent.students = Object.assign(this.$parent.students, this.newStudent);
+                    this.newStudent = {
+                        'id_student': null,
+                        'name': null,
+                        'group_id': null,
+                        'phone': null,
+                        'address': null
+                    }
+              })
+            },
             showDataStudent(studentId) {
                 this.studentEdit = true;
                 this.editStudent = this.$parent.students.find(function (i) {
@@ -157,17 +215,17 @@
                 });
                 this.vkLink = this.editStudent.vk_link;
             },
-            saveVkLink () {
+            saveVkLink() {
                 this.vkError = null;
                 this.load = true;
-                axios.post('/vk/saveLink',{
+                axios.post('/vk/saveLink', {
                     'vkLink': this.vkLink,
                     'studentId': this.editStudent.id_student
                 }).then(() => {
-                        this.vkEdit = false;
-                        this.editStudent.vk_link = this.vkLink;
-                        this.load = false;
-                    }).catch(() => {
+                    this.vkEdit = false;
+                    this.editStudent.vk_link = this.vkLink;
+                    this.load = false;
+                }).catch(() => {
                     this.load = false;
                     this.vkError = 'Профиль пользователя приватный';
                 })

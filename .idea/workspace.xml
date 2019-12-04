@@ -2,15 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5cfd6200-09a7-4c15-a498-9cb68e13f25e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/Attach.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/VkPost.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e21c119d-2995-44f0-95a2-9011ed0b0ea8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e21c119d-2995-44f0-95a2-9011ed0b0ea8.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/components/newGroupComponent.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/StudentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/StudentController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/VkController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/VkController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/GroupsComponent.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/GroupsComponent.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/components/ShowComponent.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/ShowComponent.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -259,22 +257,7 @@
       <list>
         <serviceView>
           <treeState>
-            <expand>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:AnalyzerVk@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-              </path>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:AnalyzerVk@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-                <item name="com.intellij.database.console.session.MessageBusSession@424db794" type="9fbbdea:ServiceModel$ServiceNode" />
-              </path>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:AnalyzerVk@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-                <item name="com.intellij.database.console.session.MessageBusSession@573f76e1" type="9fbbdea:ServiceModel$ServiceNode" />
-              </path>
-            </expand>
+            <expand />
             <select />
           </treeState>
         </serviceView>
@@ -329,7 +312,7 @@
       <workItem from="1575337889109" duration="10983000" />
       <workItem from="1575353934575" duration="14873000" />
       <workItem from="1575419688516" duration="3774000" />
-      <workItem from="1575443559933" duration="263000" />
+      <workItem from="1575443559933" duration="11285000" />
     </task>
     <task id="LOCAL-00001" summary="* получение постов пользователей">
       <created>1575300716325</created>
@@ -345,7 +328,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575354491846</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="* Сбор всех данные о постах с api vk">
+      <created>1575443903267</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1575443903267</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -356,18 +346,19 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="* получение постов пользователей" />
     <MESSAGE value="* Прикрепление ссылки vk и его настоящего vk ID" />
-    <option name="LAST_COMMIT_MESSAGE" value="* Прикрепление ссылки vk и его настоящего vk ID" />
+    <MESSAGE value="* Сбор всех данные о постах с api vk" />
+    <option name="LAST_COMMIT_MESSAGE" value="* Сбор всех данные о постах с api vk" />
   </component>
   <component name="WindowStateProjectService">
     <state x="432" y="163" key="#Notifications" timestamp="1575266064524">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="432" y="163" key="#Notifications/0.0.1680.1010/-1280.22.1280.984@0.0.1680.1010" timestamp="1575266064524" />
-    <state x="428" y="0" key="CommitChangelistDialog2" timestamp="1575354490126">
+    <state x="428" y="0" key="CommitChangelistDialog2" timestamp="1575443901754">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="391" y="0" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1575300714930" />
-    <state x="428" y="0" key="CommitChangelistDialog2/0.0.1680.1010/-1280.22.1280.984@0.0.1680.1010" timestamp="1575354490126" />
+    <state x="428" y="0" key="CommitChangelistDialog2/0.0.1680.1010/-1280.22.1280.984@0.0.1680.1010" timestamp="1575443901754" />
     <state width="1125" height="251" key="GridCell.Tab.0.bottom" timestamp="1575419738459">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
@@ -388,16 +379,20 @@
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="341" y="147" key="SettingsEditor/0.0.1680.1010/-1280.22.1280.984@0.0.1680.1010" timestamp="1575266121216" />
-    <state x="395" y="173" key="Vcs.Push.Dialog.v2" timestamp="1575354566473">
+    <state x="395" y="173" key="Vcs.Push.Dialog.v2" timestamp="1575456230801">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="361" y="141" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1575300719654" />
-    <state x="395" y="173" key="Vcs.Push.Dialog.v2/0.0.1680.1010/-1280.22.1280.984@0.0.1680.1010" timestamp="1575354566473" />
+    <state x="395" y="173" key="Vcs.Push.Dialog.v2/0.0.1680.1010/-1280.22.1280.984@0.0.1680.1010" timestamp="1575456230801" />
     <state x="530" y="60" width="582" height="722" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1575423893139">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="485" y="49" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1575388986275" />
     <state x="530" y="60" width="582" height="722" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.1680.1010/-1280.22.1280.984@0.0.1680.1010" timestamp="1575423893139" />
+    <state x="-1253" y="22" width="1005" height="785" maximized="true" key="dock-window-1" timestamp="1575455017830">
+      <screen x="-1280" y="22" width="1280" height="984" />
+    </state>
+    <state x="-1253" y="22" width="1005" height="785" maximized="true" key="dock-window-1/0.0.1680.1010/-1280.22.1280.984@0.0.1680.1010" timestamp="1575455017830" />
     <state x="503" y="217" width="672" height="678" key="search.everywhere.popup" timestamp="1575422416492">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
