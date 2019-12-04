@@ -40999,7 +40999,7 @@ var render = function() {
                             "v-col",
                             { attrs: { cols: "12" } },
                             [
-                              _vm.apiError
+                              _vm.vkLink !== null
                                 ? _c(
                                     "v-alert",
                                     {

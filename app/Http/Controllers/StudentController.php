@@ -31,7 +31,7 @@ class StudentController extends Controller
                 [
                     'status' => 'error',
                     'error' => 'id = null'
-                ], 401);
+                ], 400);
         }
     }
 

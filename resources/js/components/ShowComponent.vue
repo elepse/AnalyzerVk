@@ -101,7 +101,7 @@
                                 <v-text-field v-model="vkLink" label="Ссылка на профиль VK" required></v-text-field>
                             </v-col>
                             <v-col cols="12">
-                                <v-alert v-if="apiError" dense outlined type="error">
+                                <v-alert v-if="vkLink !== null" dense outlined type="error">
                                     Профиль пользователя приватный
                                 </v-alert>
                             </v-col>
