@@ -33,6 +33,14 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::get('showGroup/{id}', 'StudentController@students');
     Route::post('student/save', 'StudentController@edit');
     Route::post('student/create', 'StudentController@create');
+    Route::get('student/getPosts/{id}', 'StudentController@getPosts');
+    Route::post('student/delete', 'StudentController@delete');
+
+    Route::group(['prefix' => 'group'], function (){
+        Route::get('getCurators','GroupController@groups');
+        Route::post('create','GroupController@create');
+        Route::post('delete', 'GroupController@delete');
+    });
 });
 
 

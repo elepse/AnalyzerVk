@@ -4,6 +4,8 @@ import AuthComponent from './components/AuthComponent'
 import ExampleComponent from './components/ExampleComponent'
 import TestComponent from './components/TestComponent'
 import GroupComponent from './components/GroupsComponent'
+import NewGroupComponent from './components/newGroupComponent'
+import StudentPosts from './components/studentPostsComponent'
 // Routes
 const routes = [
     {
@@ -24,7 +26,7 @@ const routes = [
     },
     {
         path: '/test',
-        name: 'home',
+        name: 'asd',
         component: TestComponent,
         meta: {
             auth: true
@@ -34,6 +36,23 @@ const routes = [
         path: '/groups',
         name: 'groups',
         component: GroupComponent,
+        meta: {
+            auth: true
+        },
+    },
+    {
+        path: '/student/showPosts',
+        name: 'studentPosts',
+        component: StudentPosts,
+        props: true,
+        meta: {
+            auth: true
+        },
+    },
+    {
+        path: '/addGroup',
+        name: 'addGroup',
+        component: NewGroupComponent,
         meta: {
             auth: true
         },

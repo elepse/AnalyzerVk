@@ -11,4 +11,11 @@ class VkPost extends Model
     protected $primaryKey = 'id_vk_post';
     protected $guarded = [''];
     public $incrementing = false;
+
+
+    public function attachments()
+    {
+        return $this->hasMany(Attach::class,'id_post');
+    }
+
 }

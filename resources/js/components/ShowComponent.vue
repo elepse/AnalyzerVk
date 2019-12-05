@@ -23,6 +23,7 @@
                     </v-col>
                     <v-col justify="center" cols="12">
                         <v-btn :loading="vkLoad" v-on:click="collectVkData()" color="info">Загрузить VK данные</v-btn>
+                        <v-btn :loading="vkLoad" v-on:click="deleteGroup()" color="error">Удалить группу</v-btn>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -38,6 +39,7 @@
                 <th>Адресс</th>
                 <th>Соц.сети</th>
                 <th>Ред.</th>
+                <th>История</th>
             </tr>
             </thead>
             <tbody>
@@ -59,6 +61,11 @@
                     <v-btn icon large>
                         <v-icon v-on:click="showDataStudent(student.id_student)">mdi-account-edit</v-icon>
                     </v-btn>
+                </td>
+                <td>
+                    <router-link :to="{name: 'studentPosts', params:{idStudent: student.id_student}}">
+                        <v-icon large>mdi-history</v-icon>
+                    </router-link>
                 </td>
             </tr>
             </tbody>
@@ -85,10 +92,7 @@
                             <v-col cols="12">
                                 <v-text-field v-model="editStudent.address" label="Адресс" required></v-text-field>
                             </v-col>
-                            <v-col cols="6">
-                                <v-text-field v-model="editStudent.name_group" label="Группа" required></v-text-field>
-                            </v-col>
-                            <v-col cols="6">
+                            <v-col cols="12">
                                 <v-text-field v-model="editStudent.phone" label="Номер телефона"
                                               required></v-text-field>
                             </v-col>
@@ -96,9 +100,11 @@
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="studentEdit = false">Закрыть</v-btn>
-                    <v-btn color="blue darken-1" :loading="this.load" v-on:click="save()" text>Сохранить</v-btn>
+                    <v-spacer>
+                        <v-btn v-on:click="deleteStudent()" color="error">Удалить</v-btn>
+                    </v-spacer>
+                            <v-btn color="blue darken-1" text @click="studentEdit = false">Закрыть</v-btn>
+                            <v-btn color="blue darken-1" :loading="this.load" v-on:click="save()" text>Сохранить</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -114,7 +120,7 @@
                                 <v-text-field v-model="vkLink" label="Ссылка на профиль VK" required></v-text-field>
                             </v-col>
                             <v-col cols="12">
-                                <v-alert v-if="vkLink !== null" dense outlined type="error">
+                                <v-alert v-if="vkError !== null" dense outlined type="error">
                                     Профиль пользователя приватный
                                 </v-alert>
                             </v-col>
@@ -191,14 +197,7 @@
                     this.load = false;
                     this.newStudentModal = false;
                     this.newStudent.id_student = response.data.id_student;
-                    this.$parent.students = Object.assign(this.$parent.students, this.newStudent);
-                    this.newStudent = {
-                        'id_student': null,
-                        'name': null,
-                        'group_id': null,
-                        'phone': null,
-                        'address': null
-                    }
+                    this.$parent.showGroup(this.$parent.dataGroup.id_group);
               })
             },
             showDataStudent(studentId) {
@@ -250,6 +249,24 @@
                         this.vkLoad = false;
                         console.log(response);
                     })
+            },
+            deleteGroup() {
+                axios.post('group/delete',{
+                    'idGroup': this.$parent.dataGroup.id_group
+                }).then(() => {
+                    this.$parent.statusShowing = false;
+                    this.$parent.getGroups();
+                })
+            },
+            deleteStudent() {
+                this.load = true;
+                axios.post('student/delete',{
+                    id_student: this.editStudent.id_student
+                }).then(() => {
+                    this.load = false;
+                    this.$parent.showGroup(this.$parent.dataGroup.id_group);
+                    this.studentEdit = false;
+                })
             }
         },
     }

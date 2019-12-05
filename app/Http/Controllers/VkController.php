@@ -54,45 +54,45 @@ class VkController extends Controller
                 foreach ($userWall['items'] as $post) {
                     try {
                         DB::transaction(function () use ($post) {
-                    if (key_exists('copy_history', $post)) {
-                        $owner = $post['owner_id'];
-                        $post = $post['copy_history'][0];
-                        $is_repost = true;
-                    } else {
-                        $is_repost = false;
-                        $owner = $post['owner_id'];
-                    }
-                    $vkPost = (new VkPost())->fill([
-                        'id_vk_post' => $post['id'],
-                        'id_vk_student' => $owner,
-                        'text' => $post['text'],
-                        'date' => $post['date'],
-                        'is_repost' => $is_repost,
-                    ]);
-                    $vkPost->save();
-                    $newPost = $vkPost->id_vk_post;
-
-                    if (key_exists('attachments', $post)) {
-                        foreach ($post['attachments'] as $attach) {
-                            $type = $attach['type'];
-                            if ($type === 'photo') {
-                                $url = $attach[$type]['sizes'][count($attach[$type]['sizes']) - 1]['url'];
-                                (new Attach())->fill([
-                                    'id_post' => $newPost,
-                                    'type' => $type,
-                                    'title' => $attach[$type]['text'],
-                                    'url' => $url,
-                                ])->save();
+                            if (key_exists('copy_history', $post)) {
+                                $owner = $post['owner_id'];
+                                $post = $post['copy_history'][0];
+                                $is_repost = true;
                             } else {
-                                (new Attach())->fill([
-                                    'id_post' => $newPost,
-                                    'type' => $type,
-                                    'title' => $attach[$type]['title'],
-                                    'url' => $attach[$type]['url'],
-                                ])->save();
+                                $is_repost = false;
+                                $owner = $post['owner_id'];
                             }
-                        }
-                    }
+                            $vkPost = (new VkPost())->fill([
+                                'id_vk_post' => $post['id'],
+                                'id_vk_student' => $owner,
+                                'text' => $post['text'],
+                                'date' => $post['date'],
+                                'is_repost' => $is_repost,
+                            ]);
+                            $vkPost->save();
+                            $newPost = $vkPost->id_vk_post;
+
+                            if (key_exists('attachments', $post)) {
+                                foreach ($post['attachments'] as $attach) {
+                                    $type = $attach['type'];
+                                    if ($type === 'photo') {
+                                        $url = $attach[$type]['sizes'][count($attach[$type]['sizes']) - 1]['url'];
+                                        (new Attach())->fill([
+                                            'id_post' => $newPost,
+                                            'type' => $type,
+                                            'title' => $attach[$type]['text'],
+                                            'url' => $url,
+                                        ])->save();
+                                    } else {
+                                        (new Attach())->fill([
+                                            'id_post' => $newPost,
+                                            'type' => $type,
+                                            'title' => $attach[$type]['title'],
+                                            'url' => $attach[$type]['url'],
+                                        ])->save();
+                                    }
+                                }
+                            }
                         });
                     } catch (\PDOException $e) {
 
@@ -116,22 +116,28 @@ class VkController extends Controller
         $vkLink = $request->get('vkLink', null);
         $studentId = $request->get('studentId', null);
 
-        $vkId = explode('/', $vkLink);
-        $vkId = $vkId[count($vkId) - 1];
-        $vkRequest = new VK\Requests\Request('users.get', ['user_ids' => $vkId]);
-        $userData = $this->vkClient->send($vkRequest);
-
-        if (!$userData['response'][0]['is_closed']) {
-            Student::find($studentId)->update(['vk_id' => $userData['response'][0]['id'], 'vk_link' => $vkLink]);
+        if ($vkLink === null || $vkLink === '') {
+            Student::find($studentId)->update(['vk_id' => null, 'vk_link' => $vkLink]);
             return response()->json([
                 'status' => 'success'
             ], 200);
         } else {
-            return response()->json([
-                'status' => 'error',
-                'errors' => 'Профиль пользователя приватный.'
-            ], 400);
-        }
+            $vkId = explode('/', $vkLink);
+            $vkId = $vkId[count($vkId) - 1];
+            $vkRequest = new VK\Requests\Request('users.get', ['user_ids' => $vkId]);
+            $userData = $this->vkClient->send($vkRequest);
 
+            if (!$userData['response'][0]['is_closed']) {
+                Student::find($studentId)->update(['vk_id' => $userData['response'][0]['id'], 'vk_link' => $vkLink]);
+                return response()->json([
+                    'status' => 'success'
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'errors' => 'Профиль пользователя приватный.'
+                ], 400);
+            }
+        }
     }
 }

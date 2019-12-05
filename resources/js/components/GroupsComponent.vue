@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-row justify="center" v-if="!this.statusShowing">
-            <v-card min-width="300" v-if="groups !== null" style="margin: 5px; border-color: #ff9800;" outlined height="150" hover>
+            <v-card min-width="300" v-on:click="$router.push('addGroup')" v-if="groups !== null" style="margin: 5px; border-color: #ff9800;" outlined height="150" hover>
                 <v-container justify="center" class="fill-height">
                     <v-row style="margin: 0;" justify="center">
                         <v-icon large >mdi-account-multiple-plus-outline</v-icon>
@@ -48,6 +48,7 @@
         },
         methods: {
             getGroups() {
+                this.groups = null;
                 this.loading = true;
                 axios.get('/getGroups')
                     .then(response => {
